@@ -213,7 +213,7 @@ let j = 8;
 let k = 8;
 let m = 8;
 
-const job = nodeCron.schedule("0 27 20 * * *", function jobYouNeedToExecute() {
+const job = nodeCron.schedule("0 00 00 * * *", function jobYouNeedToExecute() {
     console.log(i);
 
     if ( i <= 31) {
@@ -223,7 +223,7 @@ const job = nodeCron.schedule("0 27 20 * * *", function jobYouNeedToExecute() {
 
 }, {timezone: "Etc/GMT"});
 
-const job2 = nodeCron.schedule("0 28 20 * * *", function jobYouNeedToExecute() {
+const job2 = nodeCron.schedule("0 02 00 * * *", function jobYouNeedToExecute() {
     console.log(j);
 
     if ( j <= 31) {
@@ -233,7 +233,7 @@ const job2 = nodeCron.schedule("0 28 20 * * *", function jobYouNeedToExecute() {
 
 }, {timezone: "Etc/GMT"});
 
-const job3 = nodeCron.schedule("0 29 20 * * *", function jobYouNeedToExecute() {
+const job3 = nodeCron.schedule("0 04 00 * * *", function jobYouNeedToExecute() {
     console.log(k);
 
     if ( k <= 31) {
@@ -243,7 +243,7 @@ const job3 = nodeCron.schedule("0 29 20 * * *", function jobYouNeedToExecute() {
 
 }, {timezone: "Etc/GMT"});
 
-const job4 = nodeCron.schedule("0 30 20 * * *", function jobYouNeedToExecute() {
+const job4 = nodeCron.schedule("0 06 00 * * *", function jobYouNeedToExecute() {
     console.log(m);
 
     if ( m <= 31) {
