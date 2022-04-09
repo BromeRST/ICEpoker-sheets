@@ -117,14 +117,14 @@ async function loop (column) {
     
     const borrowerArray = await fetchDataFromSheet();
     getLastBlockFromTs();
-    setTimeout(getFirstBlockFromTs, 5000)
+    setTimeout(getFirstBlockFromTs, 6000)
 
     setTimeout(() => {
         console.log(borrowerArray)
         for (let i = 1; i < borrowerArray.length; i++) {
             main(borrowerArray[i][0], i+1, column);
         }
-    }, 7000)
+    }, 8000)
 }
 
 async function fetchDataFromSheet2 () {
@@ -188,7 +188,7 @@ async function fetchDataFromSheet4 () {
         const getRows = await sheets.spreadsheets.values.get({
             auth,
             spreadsheetId,
-            range: "Results April 22!B66:B89",
+            range: "Results April 22!B66:B90",
         })
 
         return getRows.data.values
@@ -208,12 +208,16 @@ async function loop4 (column) {
 
 const sheetsColumnsArray = ["E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK"];
 
-let i = 8;
-let j = 8;
-let k = 8;
-let m = 8;
 
-const job = nodeCron.schedule("0 00 00 * * *", function jobYouNeedToExecute() {
+let today = new Date();
+let dd = String(today.getDate()).padStart(2, '0');
+
+let i = Number(dd);
+let j = Number(dd);
+let k = Number(dd);
+let m = Number(dd);
+
+const job = nodeCron.schedule("0 27 8 * * *", function jobYouNeedToExecute() {
     console.log(i);
 
     if ( i <= 31) {
@@ -252,3 +256,13 @@ const job4 = nodeCron.schedule("0 06 00 * * *", function jobYouNeedToExecute() {
     }
 
 }, {timezone: "Etc/GMT"});
+
+/* const findBlock = async () => {
+    const response = await fetch(
+      `https://api.polygonscan.com/api?module=block&action=getblocknobytime&timestamp=1649375940&closest=before&apikey=YourApiKeyToken`
+    );
+    const blockNumber = await response.json();
+    console.log(Number(blockNumber.result))
+}
+
+findBlock(); */
