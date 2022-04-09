@@ -212,12 +212,12 @@ const sheetsColumnsArray = ["E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O
 let today = new Date();
 let dd = String(today.getDate()).padStart(2, '0');
 
-let i = Number(dd);
-let j = Number(dd);
-let k = Number(dd);
-let m = Number(dd);
+let i = Number(dd) - 1;
+let j = Number(dd) - 1;
+let k = Number(dd) - 1;
+let m = Number(dd) - 1;
 
-const job = nodeCron.schedule("0 27 8 * * *", function jobYouNeedToExecute() {
+const job = nodeCron.schedule("0 01 00 * * *", function jobYouNeedToExecute() {
     console.log(i);
 
     if ( i <= 31) {
@@ -227,7 +227,7 @@ const job = nodeCron.schedule("0 27 8 * * *", function jobYouNeedToExecute() {
 
 }, {timezone: "Etc/GMT"});
 
-const job2 = nodeCron.schedule("0 02 00 * * *", function jobYouNeedToExecute() {
+const job2 = nodeCron.schedule("0 03 00 * * *", function jobYouNeedToExecute() {
     console.log(j);
 
     if ( j <= 31) {
@@ -237,7 +237,7 @@ const job2 = nodeCron.schedule("0 02 00 * * *", function jobYouNeedToExecute() {
 
 }, {timezone: "Etc/GMT"});
 
-const job3 = nodeCron.schedule("0 04 00 * * *", function jobYouNeedToExecute() {
+const job3 = nodeCron.schedule("0 05 00 * * *", function jobYouNeedToExecute() {
     console.log(k);
 
     if ( k <= 31) {
@@ -247,7 +247,7 @@ const job3 = nodeCron.schedule("0 04 00 * * *", function jobYouNeedToExecute() {
 
 }, {timezone: "Etc/GMT"});
 
-const job4 = nodeCron.schedule("0 06 00 * * *", function jobYouNeedToExecute() {
+const job4 = nodeCron.schedule("0 07 00 * * *", function jobYouNeedToExecute() {
     console.log(m);
 
     if ( m <= 31) {
