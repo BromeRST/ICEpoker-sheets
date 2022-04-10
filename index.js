@@ -22,6 +22,9 @@ let firstTimestamp;
 let lastBlock;
 let firstBlock;
 
+let today;
+let dd;
+
 // function to find block based on timestamp
 const findBlockFromTimestamp = async (timestamp) => {
     const response = await fetch(
@@ -117,14 +120,14 @@ async function loop (column) {
     
     const borrowerArray = await fetchDataFromSheet();
     getLastBlockFromTs();
-    setTimeout(getFirstBlockFromTs, 6000)
+    setTimeout(getFirstBlockFromTs, 8000)
 
     setTimeout(() => {
         console.log(borrowerArray)
         for (let i = 1; i < borrowerArray.length; i++) {
             main(borrowerArray[i][0], i+1, column);
         }
-    }, 8000)
+    }, 10000)
 }
 
 async function fetchDataFromSheet2 () {
@@ -209,50 +212,47 @@ async function loop4 (column) {
 const sheetsColumnsArray = ["E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK"];
 
 
-let today = new Date();
-let dd = String(today.getDate()).padStart(2, '0');
+let i;
 
-let i = Number(dd) - 1;
-let j = Number(dd) - 1;
-let k = Number(dd) - 1;
-let m = Number(dd) - 1;
+function updateDate() {
+    today = new Date(); 
+    dd = String(today.getDate()).padStart(2, '0');
+    i = Number(dd - 1);
+}
 
-const job = nodeCron.schedule("0 01 00 * * *", function jobYouNeedToExecute() {
-    console.log(i);
+const job = nodeCron.schedule("0 02 00 * * *", function jobYouNeedToExecute() {
+    updateDate();
+    console.log("i", i);
 
     if ( i <= 31) {
         loop(sheetsColumnsArray[i]);
-        i ++;
     }
 
 }, {timezone: "Etc/GMT"});
 
-const job2 = nodeCron.schedule("0 03 00 * * *", function jobYouNeedToExecute() {
-    console.log(j);
+const job2 = nodeCron.schedule("0 04 00 * * *", function jobYouNeedToExecute() {
+    console.log(i);
 
-    if ( j <= 31) {
-        loop2(sheetsColumnsArray[j]);
-        j ++;
+    if ( i <= 31) {
+        loop2(sheetsColumnsArray[i]);
     }
 
 }, {timezone: "Etc/GMT"});
 
-const job3 = nodeCron.schedule("0 05 00 * * *", function jobYouNeedToExecute() {
-    console.log(k);
+const job3 = nodeCron.schedule("0 06 10 * * *", function jobYouNeedToExecute() {
+    console.log(i);
 
-    if ( k <= 31) {
-        loop3(sheetsColumnsArray[k]);
-        k ++;
+    if ( i <= 31) {
+        loop3(sheetsColumnsArray[i]);
     }
 
 }, {timezone: "Etc/GMT"});
 
-const job4 = nodeCron.schedule("0 07 00 * * *", function jobYouNeedToExecute() {
-    console.log(m);
+const job4 = nodeCron.schedule("0 08 00 * * *", function jobYouNeedToExecute() {
+    console.log(i);
 
-    if ( m <= 31) {
-        loop4(sheetsColumnsArray[m]);
-        m ++;
+    if ( i <= 31) {
+        loop4(sheetsColumnsArray[i]);
     }
 
 }, {timezone: "Etc/GMT"});
