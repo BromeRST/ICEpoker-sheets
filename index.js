@@ -208,6 +208,31 @@ async function loop4 (column) {
     }
 }
 
+async function fetchDataFromSheet5 () {
+    const client = await auth.getClient();
+    const sheets = google.sheets({version: 'v4', auth: client});
+
+    try {
+        // Read rows from spreadsheet
+        const getRows = await sheets.spreadsheets.values.get({
+            auth,
+            spreadsheetId,
+            range: "Results April 22!B90:B",
+        })
+
+        return getRows.data.values
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function loop5 (column) {
+    const borrowerArray = await fetchDataFromSheet4();
+    console.log(borrowerArray)
+    for (let i = 0 ; i < borrowerArray.length; i++) {
+        main(borrowerArray[i][0], i+91, column)
+    }
+}
 
 const sheetsColumnsArray = ["E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK"];
 
@@ -253,6 +278,15 @@ const job4 = nodeCron.schedule("0 08 00 * * *", function jobYouNeedToExecute() {
 
     if ( i <= 31) {
         loop4(sheetsColumnsArray[i]);
+    }
+
+}, {timezone: "Etc/GMT"});
+
+const job5 = nodeCron.schedule("0 10 00 * * *", function jobYouNeedToExecute() {
+    console.log(i);
+
+    if ( i <= 31) {
+        loop5(sheetsColumnsArray[i]);
     }
 
 }, {timezone: "Etc/GMT"});
