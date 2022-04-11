@@ -239,7 +239,7 @@ const job2 = nodeCron.schedule("0 04 00 * * *", function jobYouNeedToExecute() {
 
 }, {timezone: "Etc/GMT"});
 
-const job3 = nodeCron.schedule("0 06 10 * * *", function jobYouNeedToExecute() {
+const job3 = nodeCron.schedule("0 06 00 * * *", function jobYouNeedToExecute() {
     console.log(i);
 
     if ( i <= 31) {
@@ -259,7 +259,7 @@ const job4 = nodeCron.schedule("0 08 00 * * *", function jobYouNeedToExecute() {
 
 /* const findBlock = async () => {
     const response = await fetch(
-      `https://api.polygonscan.com/api?module=block&action=getblocknobytime&timestamp=1649375940&closest=before&apikey=YourApiKeyToken`
+      `https://api.polygonscan.com/api?module=block&action=getblocknobytime&timestamp=1649548860&closest=before&apikey=YourApiKeyToken`
     );
     const blockNumber = await response.json();
     console.log(Number(blockNumber.result))
