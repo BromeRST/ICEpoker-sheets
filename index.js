@@ -49,7 +49,7 @@ async function getFirstBlockFromTs () {
 const fetchERC20BorrowerEntry = async (borrower) => {
     try {
         if (borrower !== undefined) {
-            const filter = contract.filters.Transfer(null, borrower);
+            const filter = contract.filters.Transfer("0x1AE5397942Bf43CE1Fe3f137622A0a7a33Ac4826", borrower);
             const events = await contract.queryFilter(filter, firstBlock, lastBlock);
             let totalDailyEarn = 0;
 
@@ -219,7 +219,7 @@ async function fetchDataFromSheet5 () {
         const getRows = await sheets.spreadsheets.values.get({
             auth,
             spreadsheetId,
-            range: "Results April 22!B90:B",
+            range: "Results April 22!B91:B",
         })
 
         return getRows.data.values
@@ -231,15 +231,17 @@ async function fetchDataFromSheet5 () {
 async function loop5 (column) {
     const borrowerArray = await fetchDataFromSheet5();
     console.log(borrowerArray)
-    for (let i = 0 ; i < borrowerArray.length; i++) {
-        main(borrowerArray[i][0], i+91, column)
+    if (borrowerArray !== undefined) {
+        for (let i = 0 ; i < borrowerArray.length; i++) {
+            main(borrowerArray[i][0], i+91, column)
+        }
     }
 }
 
 const sheetsColumnsArray = ["E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK"];
 
 
-let i;
+let i; 
 
 function updateDate() {
     today = new Date(); 
@@ -291,7 +293,6 @@ const job5 = nodeCron.schedule("0 10 00 * * *", function jobYouNeedToExecute() {
         loop5(sheetsColumnsArray[i]);
     }
 
-    fetchDataFromSheetTotal()
 }, {timezone: "Etc/GMT"});
 
 const job6 = nodeCron.schedule("0 12 00 * * *", function jobYouNeedToExecute() {
@@ -306,7 +307,7 @@ const job6 = nodeCron.schedule("0 12 00 * * *", function jobYouNeedToExecute() {
 // function to find block number from timestamp
 /* const findBlock = async () => {
     const response = await fetch(
-      `https://api.polygonscan.com/api?module=block&action=getblocknobytime&timestamp=1649203320&closest=before&apikey=YourApiKeyToken`
+      `https://api.polygonscan.com/api?module=block&action=getblocknobytime&timestamp=1649116920&closest=before&apikey=YourApiKeyToken`
     );
     const blockNumber = await response.json();
     console.log(Number(blockNumber.result))
@@ -344,8 +345,6 @@ async function fetchDataFromSheetTotal () {
     }
 }
 
-fetchDataFromSheetTotal()
-
 // function to fetch daily ERC20 send to guild 20%
 const fetchERC20BorrowerSend20 = async (borrower, dailyEarn, startRowIndex) => {
     try {
@@ -365,9 +364,9 @@ const fetchERC20BorrowerSend20 = async (borrower, dailyEarn, startRowIndex) => {
             } /* else {
                 console.log("false");
             } */
-        } else {
+        } /* else {
             console.log("no address")
-        }
+        } */
     } catch (err) {
         console.error(err);
     }
@@ -414,3 +413,9 @@ async function colorGreen (startRowIndex) {
       console.error(err);
     }
 }
+
+/* let date2 = new Date("2022-04-12T00:02:00Z");
+let timestamp = date2.getTime()
+console.log(timestamp / 1000)
+
+let dates = ["2022-04-06T00:02:00Z" ,"2022-04-07T00:02:00Z", "2022-04-08T00:02:00Z" ,"2022-04-09T00:02:00Z", "2022-04-10T00:02:00Z", "2022-04-11T00:02:00Z", "2022-04-12T00:02:00Z"] */
