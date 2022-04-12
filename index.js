@@ -16,6 +16,8 @@ const alchemyProvider = new ethers.providers.JsonRpcProvider(POLYGON_KEY);
 
 const contract = new ethers.Contract(ERC20_ADDRESS, abi, alchemyProvider);
 
+const guildAddr = "0x9C415DC99eb8fF4Fe2FDa81cf7DCcD15820dD5cA";
+
 let lastTimestamp;
 let firstTimestamp;
 
@@ -43,7 +45,7 @@ async function getFirstBlockFromTs () {
     firstBlock = await findBlockFromTimestamp(firstTimestamp);
 }
 
-// function to fetch daily FUD earn
+// function to fetch daily ERC20 earn
 const fetchERC20BorrowerEntry = async (borrower) => {
     try {
         if (borrower !== undefined) {
@@ -289,14 +291,126 @@ const job5 = nodeCron.schedule("0 10 00 * * *", function jobYouNeedToExecute() {
         loop5(sheetsColumnsArray[i]);
     }
 
+    fetchDataFromSheetTotal()
 }, {timezone: "Etc/GMT"});
 
+const job6 = nodeCron.schedule("0 12 00 * * *", function jobYouNeedToExecute() {
+    console.log(i);
+
+    if ( i <= 31) {
+        fetchDataFromSheetTotal()
+    }
+
+}, {timezone: "Etc/GMT"});
+
+// function to find block number from timestamp
 /* const findBlock = async () => {
     const response = await fetch(
-      `https://api.polygonscan.com/api?module=block&action=getblocknobytime&timestamp=1649548860&closest=before&apikey=YourApiKeyToken`
+      `https://api.polygonscan.com/api?module=block&action=getblocknobytime&timestamp=1649203320&closest=before&apikey=YourApiKeyToken`
     );
     const blockNumber = await response.json();
     console.log(Number(blockNumber.result))
 }
 
 findBlock(); */
+
+// function to find addresses and daily gain for address from sheet
+async function fetchDataFromSheetTotal () {
+    const client = await auth.getClient();
+    const sheets = google.sheets({version: 'v4', auth: client});
+
+    try {
+        // Read rows from spreadsheet
+        const getRows = await sheets.spreadsheets.values.get({
+            auth,
+            spreadsheetId,
+            range: "Results April 22!B:B",
+        })
+
+        const getDailyEarn = await sheets.spreadsheets.values.get({
+            auth,
+            spreadsheetId,
+            range: `Results April 22!${sheetsColumnsArray[i]}:${sheetsColumnsArray[i]}`,
+        })
+
+        const length = getRows.data.values.length;
+
+        for (let i = 1; i < length; i ++) {
+            fetchERC20BorrowerSend20(getRows.data.values[i][0], getDailyEarn.data.values[i][0], i)
+        }
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+fetchDataFromSheetTotal()
+
+// function to fetch daily ERC20 send to guild 20%
+const fetchERC20BorrowerSend20 = async (borrower, dailyEarn, startRowIndex) => {
+    try {
+        if (borrower !== undefined) {
+            const filter = contract.filters.Transfer(borrower, guildAddr );
+            const events = await contract.queryFilter(filter, firstBlock, lastBlock);
+            let totalSent = 0;
+
+            events.map((e) =>
+                totalSent += Number(ethers.utils.formatUnits(e.args.val))
+            );
+
+            //console.log("borrower", borrower, "sent", Number(totalSent.toFixed(0)), "dE", Number(dailyEarn));
+            if (Number(totalSent.toFixed(0)) > Number(dailyEarn) * 0.18 && Number(totalSent.toFixed(0)) < Number(dailyEarn) * 0.22) {
+                //console.log("true")
+                colorGreen(startRowIndex)
+            } /* else {
+                console.log("false");
+            } */
+        } else {
+            console.log("no address")
+        }
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+// function to verify that player sent the right ammount to guild
+async function colorGreen (startRowIndex) {
+    const client = await auth.getClient();
+    const sheets = google.sheets({version: 'v4', auth: client});
+
+    try {
+
+        const sheetId = 1956878916; // TO CHANGE EVERY MONTH
+
+      // Write row(s) to spreadsheet
+        sheets.spreadsheets.batchUpdate({
+            spreadsheetId,
+            resource: {
+                requests : {
+                    updateCells: {
+                        range: {
+                            sheetId: sheetId,
+                            startRowIndex: startRowIndex,
+                            endRowIndex: startRowIndex + 1,
+                            startColumnIndex: i + 4 ,
+                            endColumnIndex: i + 5 ,
+                        },
+                        rows: [{
+                            values: [{
+                                userEnteredFormat: {
+                                    backgroundColor: {
+                                        green: 1.0
+                                    }
+                                }
+                            }]
+                        }],
+                    fields: "userEnteredFormat.backgroundColor",
+                    }
+                }
+            }
+        })
+
+    } catch (err) {
+      console.error(err);
+    }
+}
