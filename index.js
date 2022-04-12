@@ -227,7 +227,7 @@ async function fetchDataFromSheet5 () {
 }
 
 async function loop5 (column) {
-    const borrowerArray = await fetchDataFromSheet4();
+    const borrowerArray = await fetchDataFromSheet5();
     console.log(borrowerArray)
     for (let i = 0 ; i < borrowerArray.length; i++) {
         main(borrowerArray[i][0], i+91, column)
