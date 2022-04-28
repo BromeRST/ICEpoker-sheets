@@ -21,8 +21,8 @@ const guildAddr = "0x9C415DC99eb8fF4Fe2FDa81cf7DCcD15820dD5cA";
 let lastTimestamp;
 let firstTimestamp;
 
-let lastBlock;
-let firstBlock;
+let lastBlock /* = 27656131; */
+let firstBlock /* = 27616205; */
 
 let today;
 let dd;
@@ -241,7 +241,7 @@ async function loop5 (column) {
 const sheetsColumnsArray = ["E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK"];
 
 
-let i; 
+let i;
 
 function updateDate() {
     today = new Date(); 
@@ -307,10 +307,10 @@ const job6 = nodeCron.schedule("0 12 00 * * *", function jobYouNeedToExecute() {
 // function to find block number from timestamp
 /* const findBlock = async () => {
     const response = await fetch(
-      `https://api.polygonscan.com/api?module=block&action=getblocknobytime&timestamp=1649116920&closest=before&apikey=YourApiKeyToken`
+      `https://api.polygonscan.com/api?module=block&action=getblocknobytime&timestamp=1651017720&closest=before&apikey=YourApiKeyToken`
     );
     const blockNumber = await response.json();
-    console.log(Number(blockNumber.result))
+    console.log("BLOCK", Number(blockNumber.result))
 }
 
 findBlock(); */
