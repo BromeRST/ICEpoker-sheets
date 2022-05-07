@@ -21,8 +21,8 @@ const guildAddr = "0x9C415DC99eb8fF4Fe2FDa81cf7DCcD15820dD5cA";
 let lastTimestamp;
 let firstTimestamp;
 
-let lastBlock /* = 27656131; */
-let firstBlock /* = 27616205; */
+let lastBlock /* = 28010646 */
+let firstBlock /* = 27971658 */
 
 let today;
 let dd;
@@ -82,7 +82,7 @@ async function main (borrower, i, column) {
         sheets.spreadsheets.values.append({
             auth,
             spreadsheetId,
-            range: `Results April 22!${column}${i}`, //`Foglio1!A${i}:B${i}`,
+            range: `Results May 22!${column}${i}`, //`Foglio1!A${i}:B${i}`,
             valueInputOption: "USER_ENTERED",
             resource: {
                 values: [
@@ -106,7 +106,7 @@ async function fetchDataFromSheet () {
         const getRows = await sheets.spreadsheets.values.get({
             auth,
             spreadsheetId,
-            range: "Results April 22!B1:B20",
+            range: "Results May 22!B1:B20",
         })
 
         return getRows.data.values
@@ -141,7 +141,7 @@ async function fetchDataFromSheet2 () {
         const getRows = await sheets.spreadsheets.values.get({
             auth,
             spreadsheetId,
-            range: "Results April 22!B21:B41",
+            range: "Results May 22!B21:B41",
         })
 
         return getRows.data.values
@@ -167,7 +167,7 @@ async function fetchDataFromSheet3 () {
         const getRows = await sheets.spreadsheets.values.get({
             auth,
             spreadsheetId,
-            range: "Results April 22!B42:B65",
+            range: "Results May 22!B42:B65",
         })
 
         return getRows.data.values
@@ -193,7 +193,7 @@ async function fetchDataFromSheet4 () {
         const getRows = await sheets.spreadsheets.values.get({
             auth,
             spreadsheetId,
-            range: "Results April 22!B66:B90",
+            range: "Results May 22!B66:B90",
         })
 
         return getRows.data.values
@@ -219,7 +219,7 @@ async function fetchDataFromSheet5 () {
         const getRows = await sheets.spreadsheets.values.get({
             auth,
             spreadsheetId,
-            range: "Results April 22!B91:B",
+            range: "Results May 22!B91:B120",
         })
 
         return getRows.data.values
@@ -238,6 +238,34 @@ async function loop5 (column) {
     }
 }
 
+async function fetchDataFromSheet6 () {
+    const client = await auth.getClient();
+    const sheets = google.sheets({version: 'v4', auth: client});
+
+    try {
+        // Read rows from spreadsheet
+        const getRows = await sheets.spreadsheets.values.get({
+            auth,
+            spreadsheetId,
+            range: "Results May 22!B121:B",
+        })
+
+        return getRows.data.values
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function loop6 (column) {
+    const borrowerArray = await fetchDataFromSheet6();
+    console.log(borrowerArray)
+    if (borrowerArray !== undefined) {
+        for (let i = 0 ; i < borrowerArray.length; i++) {
+            main(borrowerArray[i][0], i+121, column)
+        }
+    }
+}
+
 const sheetsColumnsArray = ["E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK"];
 
 
@@ -246,7 +274,11 @@ let i;
 function updateDate() {
     today = new Date(); 
     dd = String(today.getDate()).padStart(2, '0');
-    i = Number(dd - 1);
+    if (Number(dd) === 1) {
+        i = 30
+    } else {
+        i = Number(dd - 1);
+    }
 }
 
 const job = nodeCron.schedule("0 02 00 * * *", function jobYouNeedToExecute() {
@@ -299,6 +331,15 @@ const job6 = nodeCron.schedule("0 12 00 * * *", function jobYouNeedToExecute() {
     console.log(i);
 
     if ( i <= 31) {
+        loop6(sheetsColumnsArray[i]);
+    }
+
+}, {timezone: "Etc/GMT"});
+
+const job7 = nodeCron.schedule("0 14 00 * * *", function jobYouNeedToExecute() {
+    console.log(i);
+
+    if ( i <= 31) {
         fetchDataFromSheetTotal()
     }
 
@@ -307,7 +348,7 @@ const job6 = nodeCron.schedule("0 12 00 * * *", function jobYouNeedToExecute() {
 // function to find block number from timestamp
 /* const findBlock = async () => {
     const response = await fetch(
-      `https://api.polygonscan.com/api?module=block&action=getblocknobytime&timestamp=1651017720&closest=before&apikey=YourApiKeyToken`
+      `https://api.polygonscan.com/api?module=block&action=getblocknobytime&timestamp=1651881720&closest=before&apikey=YourApiKeyToken`
     );
     const blockNumber = await response.json();
     console.log("BLOCK", Number(blockNumber.result))
@@ -325,13 +366,13 @@ async function fetchDataFromSheetTotal () {
         const getRows = await sheets.spreadsheets.values.get({
             auth,
             spreadsheetId,
-            range: "Results April 22!B:B",
+            range: "Results May 22!B:B",
         })
 
         const getDailyEarn = await sheets.spreadsheets.values.get({
             auth,
             spreadsheetId,
-            range: `Results April 22!${sheetsColumnsArray[i]}:${sheetsColumnsArray[i]}`,
+            range: `Results May 22!${sheetsColumnsArray[i]}:${sheetsColumnsArray[i]}`,
         })
 
         const length = getRows.data.values.length;
@@ -379,7 +420,7 @@ async function colorGreen (startRowIndex) {
 
     try {
 
-        const sheetId = 1956878916; // TO CHANGE EVERY MONTH
+        const sheetId = 5933059; // TO CHANGE EVERY MONTH
 
       // Write row(s) to spreadsheet
         sheets.spreadsheets.batchUpdate({
